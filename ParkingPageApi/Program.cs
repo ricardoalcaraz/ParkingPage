@@ -18,6 +18,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
 app.MapGet("/ddns",  async (string host, string ip, [FromServices] HttpClient httpClient, 
     [FromServices] IHttpContextAccessor ctx) =>
 {

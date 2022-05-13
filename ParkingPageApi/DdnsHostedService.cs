@@ -13,12 +13,14 @@ public class DdnsHostedService : BackgroundService
         _logger = logger;
     }
     
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
             
         }
+
+        return Task.CompletedTask;
     }
 
     private async Task UpdateDns(CancellationToken cancellationToken)
