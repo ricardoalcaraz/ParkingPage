@@ -1,10 +1,10 @@
-namespace ParkingPageApi;
+namespace Ralcaraz.Microservices.Common;
 
-public class HttpErrorLogger : DelegatingHandler
+public class HttpErrorBodyLogger : DelegatingHandler
 {
-    private readonly ILogger<HttpErrorLogger> _logger;
+    private readonly ILogger<HttpErrorBodyLogger> _logger;
 
-    public HttpErrorLogger(ILogger<HttpErrorLogger> logger)
+    public HttpErrorBodyLogger(ILogger<HttpErrorBodyLogger> logger)
     {
         _logger = logger;
     }

@@ -1,4 +1,4 @@
-namespace ParkingPageApi;
+namespace ParkingPageApi.Interfaces;
 
 public interface IDynamicDnsClient
 {

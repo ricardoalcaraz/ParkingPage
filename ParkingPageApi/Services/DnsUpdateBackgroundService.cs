@@ -1,4 +1,4 @@
-namespace ParkingPageApi;
+namespace ParkingPageApi.Services;
 
 public class DnsUpdateBackgroundService : BackgroundService
 {

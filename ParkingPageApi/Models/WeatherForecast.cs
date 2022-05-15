@@ -1,4 +1,4 @@
-namespace ParkingPageApi;
+namespace ParkingPageApi.Models;
 
 public class WeatherForecast
 {

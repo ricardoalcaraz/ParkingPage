@@ -1,5 +1,3 @@
-using Ralcaraz.Microservices.Common;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,7 +9,7 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddHttpClient<IDynamicDnsClient, NamecheapDynamicDnsClient>()
     .WithJitterRetryPolicy()
-    .AddHttpMessageHandler<HttpErrorLogger>();
+    .AddHttpMessageHandler<HttpErrorBodyLogger>();
 
 builder.Services.AddDbContext<ParkingPageContext>(opt => opt.UseSqlite());
 builder.Services.AddHttpContextAccessor();

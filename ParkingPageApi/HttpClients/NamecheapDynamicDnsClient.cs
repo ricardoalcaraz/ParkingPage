@@ -1,4 +1,4 @@
-namespace ParkingPageApi;
+namespace ParkingPageApi.HttpClients;
 
 public class NamecheapDynamicDnsClient : IDynamicDnsClient
 {
