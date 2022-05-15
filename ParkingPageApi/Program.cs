@@ -37,13 +37,13 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
         app.Logger.LogInformation("No server name given");
         return Results.BadRequest("ServerName is required");
     }
+
+    var remoteIp = accessor.HttpContext?.GetServerVariable("HTTP_X_FORWARDED_FOR");
+    remoteIp ??= accessor.HttpContext?.GetServerVariable("REMOTE_ADDR");
     
-    var remoteIp = accessor.HttpContext?.Connection.RemoteIpAddress;
-    var ipv4Ip = remoteIp?.MapToIPv4().ToString();
-    var ipv6Ip = remoteIp?.MapToIPv6().ToString();
-    app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
+    app.Logger.LogInformation("Received request from {Ipv4}", remoteIp);
     
-    return Results.Ok(new {ipv4Ip, ipv6Ip});
+    return Results.Ok(remoteIp);
 });
 
 // Configure the HTTP request pipeline.
