@@ -8,9 +8,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Flurl" Version="3.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.5" />
+        <PackageReference Include="Polly" Version="7.2.3" />
+        <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Ralcaraz.Microservices.Common\Ralcaraz.Microservices.Common.csproj" />
     </ItemGroup>
 
 </Project>

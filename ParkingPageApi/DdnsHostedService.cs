@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http.Extensions;
-
 namespace ParkingPageApi;
 
 public class DdnsHostedService : BackgroundService

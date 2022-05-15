@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingPage", "ParkingPage\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingPageApi", "ParkingPageApi\ParkingPageApi.csproj", "{3FD4CC59-898C-46E5-B3AC-346ACBB0531A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ralcaraz.Microservices.Common", "Ralcaraz.Microservices.Common\Ralcaraz.Microservices.Common.csproj", "{BB467B20-2D11-4C82-A07F-899174A964B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{3FD4CC59-898C-46E5-B3AC-346ACBB0531A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FD4CC59-898C-46E5-B3AC-346ACBB0531A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FD4CC59-898C-46E5-B3AC-346ACBB0531A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB467B20-2D11-4C82-A07F-899174A964B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB467B20-2D11-4C82-A07F-899174A964B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB467B20-2D11-4C82-A07F-899174A964B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB467B20-2D11-4C82-A07F-899174A964B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
