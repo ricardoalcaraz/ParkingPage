@@ -18,14 +18,14 @@ builder.Configuration.AddEnvironmentVariables("ARC_");
 builder.Configuration.AddJsonFile("secrets.json", optional: true);
 
 builder.Services
-    .AddOptions<IEnumerable<DynamicDnsSetting>>()
+    .AddOptions<List<DynamicDnsSetting>>()
     .BindConfiguration("DynamicDnsUrls");
 
 builder.Logging.AddConsole();
 
 var app = builder.Build();
 
-var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<IEnumerable<DynamicDnsSetting>>>().Value;
+var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<List<DynamicDnsSetting>>>().Value;
 
 app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor) =>
 {

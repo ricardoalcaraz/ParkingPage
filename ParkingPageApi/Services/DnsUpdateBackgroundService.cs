@@ -8,7 +8,7 @@ public class DnsUpdateBackgroundService : BackgroundService
     private readonly IEnumerable<DynamicDnsSetting> _ddnsSettings;
 
     public DnsUpdateBackgroundService(IDynamicDnsClient dynamicDnsClient, 
-        IOptions<IEnumerable<DynamicDnsSetting>> ddnsSettings,
+        IOptions<List<DynamicDnsSetting>> ddnsSettings,
         IHttpClientFactory httpClientFactory,
         ILogger<DnsUpdateBackgroundService> logger)
     {
