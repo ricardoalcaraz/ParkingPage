@@ -20,12 +20,14 @@ public class DnsUpdateBackgroundService : BackgroundService
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var delayTime = TimeSpan.FromSeconds(2);
         try
         {
             stoppingToken.ThrowIfCancellationRequested();
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(-1, stoppingToken);
+                await Task.Delay(delayTime, stoppingToken);
+                _logger.LogInformation("Background Update {Time}", DateTime.UtcNow);
             }
         }
         catch (TaskCanceledException)
