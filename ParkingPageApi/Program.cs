@@ -21,7 +21,10 @@ builder.Services
     .AddOptions<List<DynamicDnsSetting>>()
     .BindConfiguration("DynamicDnsUrls");
 
-builder.Logging.AddConsole();
+builder.Logging
+    .AddConsole()
+    .AddSystemdConsole()
+    .AddDebug();
 
 var app = builder.Build();
 
@@ -35,9 +38,12 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
         return Results.BadRequest("ServerName is required");
     }
     
-    var remoteIp = accessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-    app.Logger.LogInformation("Received request from {Ip}", remoteIp);
-    return Results.Ok(remoteIp);
+    var remoteIp = accessor.HttpContext?.Connection.RemoteIpAddress;
+    var ipv4Ip = remoteIp?.MapToIPv4().ToString();
+    var ipv6Ip = remoteIp?.MapToIPv6().ToString();
+    app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
+    
+    return Results.Ok(new {ipv4Ip, ipv6Ip});
 });
 
 // Configure the HTTP request pipeline.
