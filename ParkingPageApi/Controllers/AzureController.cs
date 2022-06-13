@@ -20,7 +20,7 @@ public class AzureController : ControllerBase
     public async Task<IActionResult> ProdWebHook(AzureRegistryPush pushEvent, CancellationToken ctx)
     {
         _logger.LogInformation("Received push event: {Event}", pushEvent);
-        IRequest pushCommand = pushEvent.Target.Tag switch
+        IRequest pushCommand = pushEvent.Target?.Tag switch
         {
             "dev" => new AzureDevPush(),
             "latest" => new AzureProdPush(),
