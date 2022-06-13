@@ -5,8 +5,8 @@ public record AzureRegistryPush
     public string Id { get; set; }
     public DateTime TimeStamp { get; set; }
     public string Action { get; set; }
-    public RegistryTarget Target { get; set; }
-    public RegistryRequest Request { get; set; }
+    public RegistryTarget? Target { get; set; }
+    public RegistryRequest? Request { get; set; }
 }
 
 public record RegistryTarget

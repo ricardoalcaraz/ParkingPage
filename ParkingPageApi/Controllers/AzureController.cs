@@ -17,7 +17,7 @@ public class AzureController : ControllerBase
     }
     
     [HttpPost("prod")]
-    public async Task<IActionResult> ProdWebHook([FromBody] AzureRegistryPush pushEvent, CancellationToken ctx)
+    public async Task<IActionResult> ProdWebHook(AzureRegistryPush pushEvent, CancellationToken ctx)
     {
         _logger.LogInformation("Received push event: {Event}", pushEvent);
         IRequest pushCommand = pushEvent.Target.Tag switch
