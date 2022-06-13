@@ -15,14 +15,14 @@ public record RegistryTarget
     public int Size { get; set; }
     public string Digest { get; set; }
     public int Length { get; set; }
-    public string Registry { get; set; }
-    public string Tag { get; set; }
+    public string? Registry { get; set; }
+    public string? Tag { get; set; }
 }
 
 public record RegistryRequest
 {
     public string Id { get; set; }
-    public string Host { get; set; }
-    public string Method { get; set; }
-    public string UserAgent { get; set; }
+    public string? Host { get; set; }
+    public string? Method { get; set; }
+    public string? UserAgent { get; set; }
 }
