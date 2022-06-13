@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Azure Container Registry Login
+      uses: Azure/docker-login@v1
+      with:
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        login-server: rarservices.azurecr.io
+        # Username used to log against the Docker registry
+        username: rarservices
+        # Password or personal access token used to log against the Docker registry
+        password: ${{secrets.REGISTRY_PASSWORD}}
+    
+    - name: Build and push Docker images
+      # You may pin to the exact commit or the version.
+      # uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+      uses: docker/build-push-action@v3.0.0
+      with:
+        context: .
+        push: true
+        tags: rarservices.azurecr.io/parking-page:latest
