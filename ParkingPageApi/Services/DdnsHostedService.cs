@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace ParkingPageApi.Services;
 
 public class DdnsHostedService : BackgroundService
@@ -11,14 +13,24 @@ public class DdnsHostedService : BackgroundService
         _logger = logger;
     }
     
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            
+        var proc = new Process {
+            StartInfo = new ProcessStartInfo {
+                FileName = "/bin/bash",
+                Arguments = "/home/ralcaraz/Documents/ParkingPage/ParkingPageApi/test.sh",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            }
+        };
+        await Task.Yield();
+        
+        proc.Start();
+        while (!proc.StandardOutput.EndOfStream) {
+            var line = await proc.StandardOutput.ReadLineAsync();
+            _logger.LogInformation("{Output}", line);
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task UpdateDns(CancellationToken cancellationToken)

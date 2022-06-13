@@ -21,4 +21,10 @@
       <ProjectReference Include="..\Ralcaraz.Microservices.Common\Ralcaraz.Microservices.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Scripts\update-services.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

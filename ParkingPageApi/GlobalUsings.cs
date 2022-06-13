@@ -10,4 +10,5 @@ global using ParkingPageApi.HttpClients;
 global using ParkingPageApi.Interfaces;
 global using ParkingPageApi.Models;
 global using ParkingPageApi.Options;
+global using ParkingPageApi.Services;
 global using Ralcaraz.Microservices.Common;

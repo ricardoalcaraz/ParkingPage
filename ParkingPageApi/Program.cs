@@ -13,6 +13,7 @@ builder.Services
 
 builder.Services.AddDbContext<ParkingPageContext>(opt => opt.UseSqlite());
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHostedService<DdnsHostedService>();
 
 builder.Configuration.AddEnvironmentVariables("ARC_");
 builder.Configuration.AddJsonFile("secrets.json", optional: true);
