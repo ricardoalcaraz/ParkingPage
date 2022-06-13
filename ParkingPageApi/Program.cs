@@ -47,6 +47,8 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
     return Results.Ok(new {ipv4Ip, ipv6Ip, ForwardedFor = accessor.HttpContext?.GetServerVariable("X-Forwarded-For")});
 });
 
+app.UseForwardedHeaders();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -54,7 +56,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
