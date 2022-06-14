@@ -46,6 +46,7 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
     }
     
     var remoteIp = accessor.HttpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+    
     if (IPAddress.TryParse(remoteIp, out var ipAddress))
     {
         var ipv4Ip = ipAddress?.MapToIPv4().ToString();
@@ -54,8 +55,15 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
     
         return Results.Ok(new {ipv4Ip, ipv6Ip});
     }
+    else
+    {
+        var ip = accessor.HttpContext!.Connection.RemoteIpAddress;
+        var ipv4Ip = ip?.MapToIPv4().ToString();
+        var ipv6Ip = ip?.MapToIPv6().ToString();
+        app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
 
-    return Results.BadRequest();
+        return Results.Ok(new {ipv4Ip, ipv6Ip});
+    }
 });
 
 
