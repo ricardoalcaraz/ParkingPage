@@ -1,3 +1,4 @@
+using System.Net;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ var app = builder.Build();
 
 var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<List<DynamicDnsSetting>>>().Value;
 
+app.UseForwardedHeaders();
+
 app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor) =>
 {
     if (string.IsNullOrWhiteSpace(name))
@@ -42,15 +45,19 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
         return Results.BadRequest("ServerName is required");
     }
     
-    var remoteIp = accessor.HttpContext?.Connection.RemoteIpAddress;
-    var ipv4Ip = remoteIp?.MapToIPv4().ToString();
-    var ipv6Ip = remoteIp?.MapToIPv6().ToString();
-    app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
+    var remoteIp = accessor.HttpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+    if (IPAddress.TryParse(remoteIp, out var ipAddress))
+    {
+        var ipv4Ip = ipAddress?.MapToIPv4().ToString();
+        var ipv6Ip = ipAddress?.MapToIPv6().ToString();
+        app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
     
-    return Results.Ok(new {ipv4Ip, ipv6Ip, ForwardedFor = accessor.HttpContext?.GetServerVariable("X-Forwarded-For")});
+        return Results.Ok(new {ipv4Ip, ipv6Ip});
+    }
+
+    return Results.BadRequest();
 });
 
-app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
