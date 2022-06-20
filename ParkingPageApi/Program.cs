@@ -29,6 +29,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders = ForwardedHeaders.All;
     options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.19.0.0"), 24));
     options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("::ffff:0.0.0.0"), 64));
+    //options.KnownProxies.Add(IPAddress.Parse("::ffff:172.19.0.4"));
     options.AllowedHosts.Add("api.ricardoalcaraz.dev");
 });
 builder.Services.AddHttpLogging(options =>
@@ -74,41 +75,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor) =>
+app.MapGet("/getIp", ([FromServices] IHttpContextAccessor accessor) =>
 {
-    if (string.IsNullOrWhiteSpace(name))
-    {
-        app.Logger.LogInformation("No server name given");
-        return Results.BadRequest("ServerName is required");
-    }
-    
-    var remoteIp = accessor.HttpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-    
-    if (IPAddress.TryParse(remoteIp, out var ipAddress))
-    {
-        var ipv4Ip = ipAddress?.MapToIPv4().ToString();
-        var ipv6Ip = ipAddress?.MapToIPv6().ToString();
-        app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
-    
-        return Results.Ok(new {ipv4Ip, ipv6Ip});
-    }
-    else
-    {
-        var ip = accessor.HttpContext!.Connection.RemoteIpAddress;
-        var ipv4Ip = ip?.MapToIPv4().ToString();
-        var ipv6Ip = ip?.MapToIPv6().ToString();
-        app.Logger.LogInformation("Received request from {Ipv4}, {Ipv6}", ipv4Ip, ipv6Ip);
-
-        return Results.Ok(new {ipv4Ip, ipv6Ip});
-    }
-});
-
-app.MapGet("/getIpOther", ([FromServices] IHttpContextAccessor accessor) =>
-{
-    var forwardedIp = accessor.HttpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-    var httpContextIp = accessor.HttpContext!.Connection.RemoteIpAddress?.MapToIPv4().ToString();
-
-    return Results.Ok(new {forwardedIp, httpContextIp});
+    var ipAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+    return Results.Ok(ipAddress);
 });
 
 app.Run();
