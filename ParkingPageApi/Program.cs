@@ -27,7 +27,10 @@ builder.Configuration.AddJsonFile("secrets.json", optional: true);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.All;
-    //options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+    options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.19.0.0"), 24));
+    options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("::ffff:172.19.0.4"), 128));
+    options.KnownProxies.Add(IPAddress.Parse("::ffff:172.19.0.4"));
+    options.AllowedHosts.Add("api.ricardoalcaraz.dev");
 });
 builder.Services.AddHttpLogging(options =>
 {
