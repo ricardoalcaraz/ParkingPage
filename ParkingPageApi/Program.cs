@@ -1,5 +1,6 @@
 using System.Net;
 using MediatR;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +24,15 @@ builder.Services.AddHostedService<DdnsHostedService>();
 builder.Configuration.AddEnvironmentVariables("ARC_");
 builder.Configuration.AddJsonFile("secrets.json", optional: true);
 
-builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
-
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.All;
+    //options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+});
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+});
 builder.Services
     .AddOptions<List<DynamicDnsSetting>>()
     .BindConfiguration("DynamicDnsUrls");
@@ -46,7 +54,7 @@ app.Use((context, next) =>
 });
 
 app.UseForwardedHeaders();
-
+app.UseHttpLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
