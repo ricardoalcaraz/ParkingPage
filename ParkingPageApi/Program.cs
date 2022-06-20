@@ -38,6 +38,13 @@ var app = builder.Build();
 
 var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<List<DynamicDnsSetting>>>().Value;
 
+
+app.Use((context, next) =>
+{
+    context.Request.Scheme = "https";
+    return next(context);
+});
+
 app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
