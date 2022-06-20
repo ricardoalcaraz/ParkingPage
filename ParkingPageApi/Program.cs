@@ -1,5 +1,6 @@
 using System.Net;
 using MediatR;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddHostedService<DdnsHostedService>();
 builder.Configuration.AddEnvironmentVariables("ARC_");
 builder.Configuration.AddJsonFile("secrets.json", optional: true);
 
+builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
+
 builder.Services
     .AddOptions<List<DynamicDnsSetting>>()
     .BindConfiguration("DynamicDnsUrls");
@@ -36,6 +39,17 @@ var app = builder.Build();
 var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<List<DynamicDnsSetting>>>().Value;
 
 app.UseForwardedHeaders();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor) =>
 {
@@ -66,14 +80,12 @@ app.MapGet("/getIp", (string? name, [FromServices] IHttpContextAccessor accessor
     }
 });
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapGet("/getIpOther", ([FromServices] IHttpContextAccessor accessor) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var forwardedIp = accessor.HttpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+    var httpContextIp = accessor.HttpContext!.Connection.RemoteIpAddress?.MapToIPv4().ToString();
 
-app.UseAuthorization();
-app.MapControllers();
+    return Results.Ok(new {forwardedIp, httpContextIp});
+});
+
 app.Run();
