@@ -32,6 +32,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddHttpLogging(options =>
 {
     options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+    options.RequestHeaders.Add("X-Forwarded-For");
+    options.RequestHeaders.Add("X-Forwarded-Host");
+    options.RequestHeaders.Add("X-Forwarded-Proto");
+    
 });
 builder.Services
     .AddOptions<List<DynamicDnsSetting>>()
@@ -47,14 +51,16 @@ var app = builder.Build();
 var dynamicDnsSettings = app.Services.GetRequiredService<IOptions<List<DynamicDnsSetting>>>().Value;
 
 
-app.Use((context, next) =>
-{
-    context.Request.Scheme = "https";
-    return next(context);
-});
-
 app.UseForwardedHeaders();
 app.UseHttpLogging();
+app.Use(async (context, next) =>
+{
+    // Connection: RemoteIp
+    app.Logger.LogInformation("Request RemoteIp: {RemoteIpAddress}",
+        context.Connection.RemoteIpAddress);
+
+    await next(context);
+});
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
